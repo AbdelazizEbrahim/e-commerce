@@ -3,7 +3,7 @@
 import Container from "./components/Container";
 import HomeBanner from "./components/HomeBanner";
 import ProductCard from "./components/products/ProductCard";
-import { products } from "./utils/product";
+import { products } from "./utils/products";
 
 export default function Home() {
   return (
