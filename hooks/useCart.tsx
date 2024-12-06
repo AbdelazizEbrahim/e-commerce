@@ -1,32 +1,54 @@
-import { createContext, useContext, useState } from "react";
+'use client'
+import { CartProductType } from "@/app/product/[productId]/ProductDetails";
+import { createContext, useCallback, useContext, useState } from "react";
 
 type CartContextType = {
-  cartTotalQty: number;
-  setCartTotalQty: React.Dispatch<React.SetStateAction<number>>;
-};
+    cartTotalQty: number;
+    cartProducts: CartProductType[] | null;
+    handleAddProductToCart: (product: CartProductType) => void;
+}
 
 export const CartContext = createContext<CartContextType | null>(null);
 
 interface Props {
-  children: React.ReactNode; // Add this to accept children
+    [propName: string] : never;
 }
 
-export const CartContextProvider: React.FC<Props> = ({ children }) => {
-  const [cartTotalQty, setCartTotalQty] = useState(0);
+export const CartContextProvider = (props: Props) => {
+    const [cartTotalQty, setCartTotalQty] = useState(0);
+    const [cartProducts, setCartProducts] = useState<CartProductType[] | null>(null);
 
-  const value = {
-    cartTotalQty,
-    setCartTotalQty, // Include this if you need to update the quantity from child components
-  };
+    const handleAddProductToCart = useCallback((product: CartProductType) => {
+        setCartProducts((prev) => {
+            let updatedCart;
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+            if (prev) {
+                updatedCart = [...prev, product]
+            } else {
+                updatedCart = [product]
+            }
+            return updatedCart;
+        })
+    }, []);
+
+    const value = {
+        cartTotalQty,
+        cartProducts,
+        handleAddProductToCart,
+    }
+
+    return <CartContext.Provider value={value} {...props}/>
 };
 
 export const useCart = () => {
-  const context = useContext(CartContext);
+    const context = useContext(CartContext);
 
-  if (context === null) {
-    throw new Error("useCart must be used within a CartContextProvider.");
-  }
+    if (context === null) {
+        throw new Error("use cart must be used in cart context provider.")
+    }
   return context;
 };
+
+
+
+
