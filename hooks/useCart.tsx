@@ -8,6 +8,7 @@ type CartContextType = {
     cartTotalQty: number;
     cartProducts: CartProductType[] | null;
     handleAddProductToCart: (product: CartProductType) => void;
+    handelRemoveProductFromCart: (product: CartProductType) => void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -46,11 +47,23 @@ export const CartContextProvider = (props: Props) => {
         toast.success("Product added to cart!");
     }, []);
     
+    const handelRemoveProductFromCart = useCallback((product: CartProductType) => {
+        if (cartProducts) {
+            const filterProducts = cartProducts.filter((item) => {
+                return item.id !== product.id;
+            })
+
+            setCartProducts(filterProducts);
+            toast.success("Product Removed");
+            localStorage.setItem("eShopCartItems", JSON.stringify(filterProducts));
+        }
+    }, [cartProducts])
 
     const value = {
         cartTotalQty,
         cartProducts,
         handleAddProductToCart,
+        handelRemoveProductFromCart
     }
 
     return <CartContext.Provider value={value} {...props}/>
