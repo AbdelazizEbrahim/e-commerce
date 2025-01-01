@@ -8,7 +8,7 @@ import { FormatPrice } from "../utils/formatPrice";
 import Image from "next/image";
 import SetQuantity from "../components/products/SetQuantity";
 import { useCart } from "@/hooks/useCart";
-
+import handleCartQtyIncrease from '@/app/product/[productId]/ProductDetails'
 
 interface ItemContentProps {
     item: CartProductType;
@@ -41,7 +41,7 @@ const ItemContent: React.FC<ItemContentProps> = ({ item }) => {
         <SetQuantity 
             cartCounter = {true}
             cartProduct={item}
-            handleQtyIncrease={() => {}}
+            handleQtyIncrease={() => {handleCartQtyIncrease(item)}}
             handleQtyDecrease={() => {}}
         />
       </div>
