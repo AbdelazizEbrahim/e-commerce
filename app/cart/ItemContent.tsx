@@ -1,20 +1,19 @@
 'use client';
 
 import React from "react";
-import { CartProductType } from "../product/[productId]/ProductDetails";
 import Link from "next/link";
 import { truncateText } from "../utils/truncate";
 import { FormatPrice } from "../utils/formatPrice";
 import Image from "next/image";
 import SetQuantity from "../components/products/SetQuantity";
 import { useCart } from "@/hooks/useCart";
-import handleCartQtyIncrease from '@/app/product/[productId]/ProductDetails'
+import { CartProductType } from '@/app/product/[productId]/ProductDetails'
 
 interface ItemContentProps {
     item: CartProductType;
 }
 const ItemContent: React.FC<ItemContentProps> = ({ item }) => {
-  const {handelRemoveProductFromCart} = useCart();
+  const {handelRemoveProductFromCart, handleCartQtyIncrease, handleCartQtyDecrease} = useCart();
   return (
     <div className="grid grid-cols-5 text-xs md:text-sm gap-4 border-t-[1.5px] border-slate-200 py-4 items-center"
     >
@@ -39,10 +38,10 @@ const ItemContent: React.FC<ItemContentProps> = ({ item }) => {
       <div className="">{FormatPrice(item.price)}</div>
       <div className="">
         <SetQuantity 
-            cartCounter = {true}
-            cartProduct={item}
-            handleQtyIncrease={() => {handleCartQtyIncrease(item)}}
-            handleQtyDecrease={() => {}}
+          cartCounter={true}
+          cartProduct={item as CartProductType} // Ensure correct typing
+          handleQtyIncrease={() => handleCartQtyIncrease(item)}
+          handleQtyDecrease={() => {handleCartQtyDecrease(item)}}
         />
       </div>
       <div className="font-semibold">
